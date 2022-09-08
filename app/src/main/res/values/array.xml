@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="module_scope">
+        <!--这里是填入需要自动勾选的应用的包名，多个就是多个item-->
+<!--        <item>com.xeasy.noticetest</item>-->
+<!--        <item>com.xeasy.noticefix</item>-->
+<!--        <item>com.tencent.karaoke</item>-->
+<!--        <item>com.tencent.tim</item>-->
+        <item>com.android.systemui</item>
+    </string-array>
+</resources>

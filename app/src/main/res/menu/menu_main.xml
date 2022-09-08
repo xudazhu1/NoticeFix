@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Theme.NoticeFix.AppBarOverlay"
+    tools:context="com.xeasy.noticefix.activity.MainActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"
+        />
+    <item
+        android:id="@+id/restart_systemui"
+        android:orderInCategory="100"
+        android:title="@string/restart_systemui"
+        app:showAsAction="never"
+        />
+</menu>

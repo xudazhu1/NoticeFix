@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:theme="@style/Theme.NoticeFix.AppBarOverlay"
+    tools:context="com.xeasy.noticefix.activity.IconLibActivity">
+    <item
+        android:id="@+id/app_filter_search"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_menu_search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom"
+        />
+</menu>

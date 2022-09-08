@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:paddingStart="3dp"
+        android:paddingEnd="8dp"
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:translationY="55dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:paddingHorizontal="15dp"
+            android:paddingTop="15dp"
+            android:text="@string/application_introduction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+        <TextView
+            android:padding="15dp"
+            android:id="@+id/xposed_status"
+            android:text="@string/xposed_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <TextView
+            android:padding="15dp"
+            android:text="@string/icon_setting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/main_recyclerView"
+            android:scrollbars="none"
+            >
+        </androidx.recyclerview.widget.RecyclerView>
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+<!--            <Button-->
+<!--                android:id="@+id/icon_lib_config"-->
+<!--                android:text="@string/icon_lib_config"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"/>-->
+            <Button
+                android:id="@+id/custom_icon_config"
+                android:text="@string/custom_icon_config"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+<!--            <Button-->
+<!--                android:id="@+id/icon_lib_config"-->
+<!--                android:text="@string/icon_lib_config"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"/>-->
+            <!--查看图标库-->
+            <Button
+                android:id="@+id/view_icon_lib"
+                android:text="@string/view_icon_lib"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+<!--            <Button-->
+<!--                android:id="@+id/icon_lib_config"-->
+<!--                android:text="@string/icon_lib_config"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"/>-->
+            <!--提示: 修改后需要重启系统或重启SystemUI生效-->
+            <TextView
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:text="@string/app_main_tips"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+<!--    <include layout="@layout/content_main" />-->
+
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="bottom|end"-->
+<!--        android:layout_marginEnd="@dimen/fab_margin"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        app:srcCompat="@android:drawable/ic_dialog_email" />-->
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

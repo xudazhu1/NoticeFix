@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/app_info_instance"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="80dp">
+    <!--app信息-->
+    <LinearLayout
+        android:id="@+id/app_info_show"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <ImageView
+            android:contentDescription="@string/v_app_icon"
+            android:padding="5dp"
+            android:src="@mipmap/tim"
+            android:id="@+id/app_info_icon"
+            android:layout_width="80dp"
+            android:layout_height="match_parent" />
+        <LinearLayout
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:gravity="center"
+            android:id="@+id/app_info_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/app_info_name"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/v_app_name" />
+
+            <TextView
+                android:id="@+id/app_info_pkg"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/v_app_pkg" />
+
+            <TextView
+                android:id="@+id/app_info_version"
+                android:singleLine="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/v_app_version" />
+
+            <TextView
+                android:id="@+id/app_info_icon_config"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_info_icon_config" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--图标信息-->
+    <LinearLayout
+        tools:ignore="UseCompoundDrawables"
+        android:layout_marginTop="5dp"
+        android:alpha="1"
+        android:background="@color/black"
+        android:theme="@android:style/ThemeOverlay.Material.Dark"
+        android:id="@+id/app_info_icon_info"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+        <TextView
+            android:paddingStart="10dp"
+            android:gravity="center"
+            android:layout_width="80dp"
+            android:text="@string/icon_preview"
+            android:layout_height="match_parent"/>
+        <LinearLayout
+            android:layout_weight="@integer/material_motion_duration_long_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:text="@string/app_info_auto_icon"
+                android:layout_height="20dp"/>
+            <!--自动转换-->
+            <ImageView
+                android:contentDescription="@string/v_app_icon"
+                android:padding="2dp"
+                android:src="@mipmap/none"
+                android:id="@+id/app_info_last_icon"
+                android:layout_width="80dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="@integer/material_motion_duration_long_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+            <TextView
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:text="@string/app_info_icon_lib"
+                android:layout_height="20dp"/>
+            <ImageView
+                android:contentDescription="@string/v_app_icon"
+                android:padding="2dp"
+                android:src="@mipmap/none"
+                android:id="@+id/app_info_icon_lib"
+                android:layout_width="80dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_weight="@integer/material_motion_duration_long_1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:text="@string/app_info_icon_custom"
+                android:layout_height="20dp"/>
+            <ImageView
+                android:contentDescription="@string/v_app_icon"
+                android:padding="2dp"
+                android:src="@android:drawable/ic_menu_add"
+                android:id="@+id/app_info_icon_custom"
+                android:layout_width="80dp"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

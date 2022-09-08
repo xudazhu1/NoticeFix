@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="application_introduction">一些app并未适配安卓5.0新的通知图标规范, 因此会造成通知图标变成方块/白块/圆块等问题, 此应用旨在解决未适配的应用造成难以辨别是哪个应用的通知的问题</string>
+    <string name="xposed_status">xposed模块是否激活: %1$s</string>
+</resources>
