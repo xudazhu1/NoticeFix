@@ -84,7 +84,7 @@
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="修复类原生系统通知显示方块的问题" />
+            android:value="修复(类)原生系统通知图标显示方块的问题, 和自定义通知图标功能" />
         <meta-data
             android:name="xposedminversion"
             android:value="82" />

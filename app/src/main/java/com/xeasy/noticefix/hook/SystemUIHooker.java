@@ -2,6 +2,7 @@ package com.xeasy.noticefix.hook;
 
 import static com.xeasy.noticefix.hook.HookConstant.gson;
 
+import android.annotation.SuppressLint;
 import android.app.AndroidAppHelper;
 import android.app.Notification;
 import android.content.ContentResolver;
@@ -12,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
 import android.service.notification.StatusBarNotification;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
@@ -67,7 +69,7 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
                 XposedBridge.log(e);
             }
             try {
-                resolveNotificationSdk(loadPackageParam.classLoader);
+                setIcon(loadPackageParam.classLoader);
             } catch (Exception e) {
                 XposedBridge.log(LOG_PREV + "hook -- resolveNotificationSdk 错误");
                 XposedBridge.log(e);
@@ -77,16 +79,44 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
     }
 
 
-    private void resolveNotificationSdk(ClassLoader classLoader) {
+    // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow#setSystemExpanded
+    // todo 测试展开通知
+    private void setSystemExpanded(ClassLoader classLoader) {
         final Class<?> clazz = XposedHelpers.findClass(
-                "com.android.systemui.statusbar.notification.collection.TargetSdkResolver", classLoader);
+                "com.android.systemui.statusbar.notification.row.ExpandableNotificationRow", classLoader);
         //Hook有参构造函数，修改参数
-        XposedHelpers.findAndHookMethod(clazz, "resolveNotificationSdk",
-                StatusBarNotification.class,
+        XposedHelpers.findAndHookMethod(clazz, "setSystemExpanded",
+                boolean.class,
                 new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) {
-                        param.setResult(20);
+                        param.args[0] = true;
+                    }
+                });
+    }
+
+    // com.android.systemui.statusbar.notification.icon.IconManager#setIcon
+    private void setIcon(ClassLoader classLoader) {
+        final Class<?> clazz = XposedHelpers.findClass(
+                "com.android.systemui.statusbar.notification.icon.IconManager", classLoader);
+        final Class<?> args0 = XposedHelpers.findClass(
+                "com.android.systemui.statusbar.notification.collection.NotificationEntry", classLoader);
+        final Class<?> args1 = XposedHelpers.findClass(
+                "com.android.internal.statusbar.StatusBarIcon", classLoader);
+        final Class<?> args2 = XposedHelpers.findClass(
+                "com.android.systemui.statusbar.StatusBarIconView", classLoader);
+        //Hook有参构造函数，修改参数
+        XposedHelpers.findAndHookMethod(clazz, "setIcon",
+                args0, args1, args2
+                , new XC_MethodHook() {
+                    @Override
+                    protected void afterHookedMethod(MethodHookParam param) {
+                        if ( HookConstant.globalConfigDao.read && HookConstant.globalConfigDao.showColoredIcons ) {
+                            View iconView = (View) param.args[2];
+                            @SuppressLint("DiscouragedApi")
+                            int preLTag = AndroidAppHelper.currentApplication().getResources().getIdentifier("icon_is_pre_L", "id", "com.android.systemui");
+                            iconView.setTag(preLTag, true);
+                        }
                     }
                 });
     }

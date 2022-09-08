@@ -19,7 +19,7 @@ public class GlobalConfigDao {
     /**
      * 是否跳过灰度
      */
-    public boolean skipGrayscale = true;
+    public boolean skipGrayscale = false;
     /**
      * 解除原生安卓色彩
      */

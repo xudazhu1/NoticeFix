@@ -80,13 +80,13 @@ public class SettingsActivity extends AppCompatActivity {
             GlobalConfigDao.globalConfigDao.showColoredIcons = isChecked;
             GlobalConfigDao.saveConfig(this, GlobalConfigDao.globalConfigDao);
         });
-        // 自定义图标帮助
-        SwitchCompat customIconHelperSwitchCompat = findViewById(R.id.custom_icon_helper);
-        customIconHelperSwitchCompat.setChecked(GlobalConfigDao.globalConfigDao.customIconHelper);
-        customIconHelperSwitchCompat.setOnCheckedChangeListener((btn, isChecked) -> {
-            GlobalConfigDao.globalConfigDao.customIconHelper = isChecked;
-            GlobalConfigDao.saveConfig(this, GlobalConfigDao.globalConfigDao);
-        });
+//        // 自定义图标帮助
+//        SwitchCompat customIconHelperSwitchCompat = findViewById(R.id.custom_icon_helper);
+//        customIconHelperSwitchCompat.setChecked(GlobalConfigDao.globalConfigDao.customIconHelper);
+//        customIconHelperSwitchCompat.setOnCheckedChangeListener((btn, isChecked) -> {
+//            GlobalConfigDao.globalConfigDao.customIconHelper = isChecked;
+//            GlobalConfigDao.saveConfig(this, GlobalConfigDao.globalConfigDao);
+//        });
         // 上传图标包
         ImageView updateIconLibrary = findViewById(R.id.update_icon_library);
 

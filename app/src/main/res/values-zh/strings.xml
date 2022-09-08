@@ -56,7 +56,7 @@
     <string name="debug_mode_desc">(测试功能勿开)</string>
     <string name="refresh_icon_library">更新新内置图标库</string>
     <string name="library_url">https://x-easy.cn/noticefix/icon_lib</string>
-    <string name="app_about">NoticeFix 0.2 By x-easy</string>
+    <string name="app_about">NoticeFix by x-easy</string>
     <string name="handle_grayscale_icons_config">不处理灰度图标</string>
     <string name="handle_grayscale_icons_config_desc">如果通知图标是灰度的, 不进行转换</string>
     <string name="icon_preview">效果预览</string>
@@ -78,4 +78,5 @@
     <string name="function_not_open">功能未开放</string>
     <string name="icon_lib_refresh_tips">"刷新成功, 此次新增图标(个): "</string>
     <string name="no_root">没有root权限!!</string>
+    <string name="help">视频演示教程@x-easy BiliBili</string>
 </resources>

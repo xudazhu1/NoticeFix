@@ -56,7 +56,7 @@
     <string name="debug_mode_desc">(TestMode for Dev, Do not touch)</string>
     <string name="refresh_icon_library">Update Icon Library</string>
     <string name="library_url">https://x-easy.cn/noticefix/icon_lib</string>
-    <string name="app_about">NoticeFix 0.2 By x-easy</string>
+    <string name="app_about">NoticeFix by x-easy</string>
     <string name="handle_grayscale_icons_config">Does not handle grayscale icons</string>
     <string name="handle_grayscale_icons_config_desc">If notification icon is grayscale, do not convert</string>
     <string name="icon_preview">icon preview</string>
@@ -78,4 +78,5 @@
     <string name="function_not_open">function not open</string>
     <string name="icon_lib_refresh_tips">System  App</string>
     <string name="no_root">No root privileges!!</string>
+    <string name="help">help @x-easy BiliBili</string>
 </resources>

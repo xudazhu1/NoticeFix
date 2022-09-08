@@ -224,7 +224,7 @@ public class ImageTools {
                     int r = Color.red(pix[i]);
                     int g = Color.green(pix[i]);
                     int b = Color.blue(pix[i]);
-                    if (r + g + b + 10 > 3 * lightNumber) {//三种颜色相加大于3倍的曝光值，才是黑色，否则白色
+                    if (r + g + b + 1 > 3 * lightNumber) {//三种颜色相加大于3倍的曝光值，才是黑色，否则白色
                         // 大设为白
                         colorTemp[i] = WHITE;
                     }
@@ -234,6 +234,51 @@ public class ImageTools {
         returnBMP.setPixels(colorTemp, 0, inputBMP.getWidth(), 0, 0,
                 inputBMP.getWidth(), inputBMP.getHeight());
         return returnBMP;
+    }
+
+    /**
+     * 反色
+     * @param inputBMP in
+     * @return r
+     */
+    public static Bitmap reverseColor(Bitmap inputBMP) {
+        int[] pix = new int[inputBMP.getWidth() * inputBMP.getHeight()];
+        int[] colorTemp = new int[inputBMP.getWidth() * inputBMP.getHeight()];
+        inputBMP.getPixels(pix, 0, inputBMP.getWidth(), 0, 0,
+                inputBMP.getWidth(), inputBMP.getHeight());
+        Bitmap returBMP = Bitmap.createBitmap(inputBMP.getWidth(),
+                inputBMP.getHeight(), Bitmap.Config.ARGB_8888);
+        int lightNumber;//曝光度，這個顔色是中間值，如果大於中間值，那就是黑色，否則白色，数值越小，曝光度越高
+        //计算中间值
+        int allLightNumber = 0;
+        int hasColor = 0;
+        for (int i = 0; i < colorTemp.length; i++) {
+            if (pix[i] != 0) {
+                int r = Color.red(pix[i]);
+                int g = Color.green(pix[i]);
+                int b = Color.blue(pix[i]);
+                allLightNumber += (r + g + b) / 3;
+                hasColor++;
+            }
+        }
+
+        // 中间值等于总的除以有的色
+        if (hasColor > 0) {
+            lightNumber = allLightNumber / hasColor;
+
+            for (int i = 0; i < colorTemp.length; i++) {
+                int r = Color.red(pix[i]);
+                int g = Color.green(pix[i]);
+                int b = Color.blue(pix[i]);
+                if (r + g + b + 1 <= 3 * lightNumber) {//三种颜色相加大于3倍的曝光值，才是黑色，否则白色
+                    // 大设为白
+                    colorTemp[i] = WHITE;
+                }
+            }
+        }
+        returBMP.setPixels(colorTemp, 0, inputBMP.getWidth(), 0, 0,
+                inputBMP.getWidth(), inputBMP.getHeight());
+        return returBMP;
     }
 
     private static boolean isWhite(int color, int lightNumber) {
@@ -479,50 +524,6 @@ public class ImageTools {
         return bmp;
     }
 
-    /**
-     * 反色
-     * @param inputBMP in
-     * @return r
-     */
-    public static Bitmap reverseColor(Bitmap inputBMP) {
-        int[] pix = new int[inputBMP.getWidth() * inputBMP.getHeight()];
-        int[] colorTemp = new int[inputBMP.getWidth() * inputBMP.getHeight()];
-        inputBMP.getPixels(pix, 0, inputBMP.getWidth(), 0, 0,
-                inputBMP.getWidth(), inputBMP.getHeight());
-        Bitmap returBMP = Bitmap.createBitmap(inputBMP.getWidth(),
-                inputBMP.getHeight(), Bitmap.Config.ARGB_8888);
-        int lightNumber;//曝光度，這個顔色是中間值，如果大於中間值，那就是黑色，否則白色，数值越小，曝光度越高
-        //计算中间值
-        int allLightNumber = 0;
-        int hasColor = 0;
-        for (int i = 0; i < colorTemp.length; i++) {
-            if (pix[i] != 0) {
-                int r = Color.red(pix[i]);
-                int g = Color.green(pix[i]);
-                int b = Color.blue(pix[i]);
-                allLightNumber += (r + g + b) / 3;
-                hasColor++;
-            }
-        }
-
-        // 中间值等于总的除以有的色
-        if (hasColor > 0) {
-            lightNumber = allLightNumber / hasColor;
-
-            for (int i = 0; i < colorTemp.length; i++) {
-                int r = Color.red(pix[i]);
-                int g = Color.green(pix[i]);
-                int b = Color.blue(pix[i]);
-                if (r + g + b + 10 <= 3 * lightNumber) {//三种颜色相加大于3倍的曝光值，才是黑色，否则白色
-                    // 大设为白
-                    colorTemp[i] = WHITE;
-                }
-            }
-        }
-        returBMP.setPixels(colorTemp, 0, inputBMP.getWidth(), 0, 0,
-                inputBMP.getWidth(), inputBMP.getHeight());
-        return returBMP;
-    }
 
     @SuppressWarnings("unused")
     private void saveBitmap(Bitmap bitmap) {
