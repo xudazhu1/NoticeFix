@@ -9,7 +9,6 @@ import android.app.Notification;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,14 +33,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
+import com.xeasy.noticefix.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.Objects;
+import java.util.concurrent.Callable;
 
 
 /**
@@ -238,6 +239,7 @@ public class ImageTools {
 
     /**
      * 反色
+     *
      * @param inputBMP in
      * @return r
      */
@@ -629,53 +631,55 @@ public class ImageTools {
 
     //保存图片到相册 主动设置uri
     public static void saveImage(Context context, Bitmap bitmap, String name) {
-        try {
-            Uri saveUri = createImagePathUri(context, name);
-            OutputStream outputStream = context.getContentResolver().openOutputStream(saveUri);
 
-            if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {//设置压缩比
-                //保存成功
-                Intent intent = new Intent();
-                intent.setData(saveUri);
-                context.sendBroadcast(intent);
-                // 最后通知图库更新
+        Callable<Objects> callable = () -> {
+            try {
+                Uri saveUri = createImagePathUri(context, name);
+                OutputStream outputStream = context.getContentResolver().openOutputStream(saveUri);
+
+                if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)) {//设置压缩比
+                    //保存成功
+                    Intent intent = new Intent();
+                    intent.setData(saveUri);
+                    context.sendBroadcast(intent);
+                    // 最后通知图库更新
 //                context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, saveUri));
-                MediaScannerConnection.scanFile(context,
-                        new String[]{"/storage/emulated/0/"}, null,
-                        (path, uri) -> Toast.makeText(context, "图片保存成功", Toast.LENGTH_SHORT).show());
+                    MediaScannerConnection.scanFile(context,
+                            new String[]{"/storage/emulated/0/"}, null,
+                            (path, uri) -> Toast.makeText(context, context.getString(R.string.save_success), Toast.LENGTH_SHORT).show());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(context, context.getString(R.string.save_fail), Toast.LENGTH_SHORT).show();
+
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(context, "图片保存失败", Toast.LENGTH_SHORT).show();
-
+            return null;
+        };
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+            PermissionsUtil.reqPermission((Activity) context, Manifest.permission.READ_MEDIA_IMAGES, callable);
+        } else {
+            PermissionsUtil.reqPermission((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE, callable);
         }
-
     }
 
     //设置保存文件的文件名等属性
     public static Uri createImagePathUri(final Context context, String imageName) {
         final Uri[] imageFilePath = {null};
 
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            imageFilePath[0] = Uri.parse("");
-//
-        } else {
-            String status = Environment.getExternalStorageState();
+        String status = Environment.getExternalStorageState();
 //            SimpleDateFormat timeFormatter = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA);
-            long time = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
 //            String imageName = timeFormatter.format(new Date(time));
-            // ContentValues是我们希望这条记录被创建时包含的数据信息
-            ContentValues values = new ContentValues(3);
-            values.put(MediaStore.Images.Media.DISPLAY_NAME, imageName);
-            values.put(MediaStore.Images.Media.DATE_TAKEN, time);
-            values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+        // ContentValues是我们希望这条记录被创建时包含的数据信息
+        ContentValues values = new ContentValues(3);
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, imageName);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, time);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
 
-            if (status.equals(Environment.MEDIA_MOUNTED)) {// 判断是否有SD卡,优先使用SD卡存储,当没有SD卡时使用手机存储
-                imageFilePath[0] = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            } else {
-                imageFilePath[0] = context.getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
-            }
+        if (status.equals(Environment.MEDIA_MOUNTED)) {// 判断是否有SD卡,优先使用SD卡存储,当没有SD卡时使用手机存储
+            imageFilePath[0] = context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        } else {
+            imageFilePath[0] = context.getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
         }
 
         return imageFilePath[0];

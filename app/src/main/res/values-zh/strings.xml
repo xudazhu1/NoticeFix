@@ -79,4 +79,6 @@
     <string name="icon_lib_refresh_tips">"刷新成功, 此次新增图标(个): "</string>
     <string name="no_root">没有root权限!!</string>
     <string name="help">视频演示教程@x-easy BiliBili</string>
+    <string name="save_fail">图片保存失败</string>
+    <string name="save_success">图片保存成功</string>
 </resources>

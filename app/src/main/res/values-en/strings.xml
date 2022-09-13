@@ -76,7 +76,9 @@
     <string name="submit">submit</string>
     <string name="cancel">cancel</string>
     <string name="function_not_open">function not open</string>
-    <string name="icon_lib_refresh_tips">System  App</string>
+    <string name="icon_lib_refresh_tips">refresh successful, the new icon(s) this time:</string>
     <string name="no_root">No root privileges!!</string>
     <string name="help">help @x-easy BiliBili</string>
+    <string name="save_fail">save fail</string>
+    <string name="save_success">save success</string>
 </resources>

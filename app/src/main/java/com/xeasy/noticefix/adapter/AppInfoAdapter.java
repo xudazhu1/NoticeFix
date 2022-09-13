@@ -2,12 +2,13 @@ package com.xeasy.noticefix.adapter;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,6 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.xeasy.noticefix.R;
@@ -29,8 +28,11 @@ import com.xeasy.noticefix.dao.AppUtil;
 import com.xeasy.noticefix.dao.CustomIconDao;
 import com.xeasy.noticefix.utils.ExpandableViewHoldersUtil;
 import com.xeasy.noticefix.utils.ImageTools;
+import com.xeasy.noticefix.utils.PermissionsUtil;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHolder> implements Filterable {
@@ -181,15 +183,18 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
             ImageView viewById = itemView.findViewById(R.id.app_info_icon_custom);
             viewById.setOnClickListener(v -> {
 
-                if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions((AppListActivity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                } else {
+                Callable<Objects> callable = () -> {
                     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                     intent.setType("image/png");//png类型
                     intent.addCategory(Intent.CATEGORY_OPENABLE);
                     intentActivityResultLauncher.launch(intent);
+                    return null;
+                };
+                if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2 ) {
+                    PermissionsUtil.reqPermission((Activity) context, Manifest.permission.READ_MEDIA_IMAGES, callable);
+                } else {
+                    PermissionsUtil.reqPermission((Activity) context, Manifest.permission.READ_EXTERNAL_STORAGE, callable);
                 }
-
             });
             viewById.setOnLongClickListener(v -> {
                 //添加确定按钮

@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
+import android.os.Build;
 import android.service.notification.StatusBarNotification;
 import android.view.View;
 import android.widget.Toast;
@@ -124,37 +125,51 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
 
     // com.android.systemui.statusbar.notification.collection.inflation.NotificationRowBinderImpl#inflateViews
     private void inflateViews(ClassLoader classLoader) {
+
+
+
         final Class<?> clazz = XposedHelpers.findClass(
                 "com.android.systemui.statusbar.notification.collection.inflation.NotificationRowBinderImpl", classLoader);
         final Class<?> args0 = XposedHelpers.findClass(
                 "com.android.systemui.statusbar.notification.collection.NotificationEntry", classLoader);
         final Class<?> args1 = XposedHelpers.findClass(
                 "com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback", classLoader);
-        XposedHelpers.findAndHookMethod(clazz, "inflateViews"
-                , args0, args1
-                , new XC_MethodHook() {
-                    @Override
-                    protected void beforeHookedMethod(MethodHookParam param) {
-                        if (!HookConstant.globalConfigDao.read) {
-                            readConfig(AndroidAppHelper.currentApplication());
-                        }
+        XC_MethodHook xc_methodHook = new XC_MethodHook() {
+            @Override
+            protected void beforeHookedMethod(MethodHookParam param) {
+                if (!HookConstant.globalConfigDao.read) {
+                    readConfig(AndroidAppHelper.currentApplication());
+                }
                         /*XposedBridge.log(LOG_PREV + "看看全局变量 HookConstant.globalConfigDao:  " + gson.toJson(HookConstant.globalConfigDao));
                         XposedBridge.log(LOG_PREV + "看看全局变量 HookConstant.iconFuncStatuses:  " + gson.toJson(HookConstant.iconFuncStatuses));
                         XposedBridge.log(LOG_PREV + "看看全局变量 HookConstant.iconLibBeanMap:  " + HookConstant.iconLibBeanMap.size());
                         XposedBridge.log(LOG_PREV + "看看全局变量 HookConstant.customIconBeanMap:  " + HookConstant.customIconBeanMap.size());
                         XposedBridge.log(LOG_PREV + "hook通知开始.包名:  " + Arrays.toString(param.args));*/
-                        try {
-                            Object notificationEntry = param.args[0];
-                            StatusBarNotification statusBarNotification = (StatusBarNotification) ReflexUtil.getField4Obj(notificationEntry, "mSbn");
-                            Context mContext = (Context) ReflexUtil.getField4Obj(param.thisObject, "mContext");
-                            Context context = mContext.createPackageContext(statusBarNotification.getPackageName(), Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
-                            fixNotificationIcon(statusBarNotification, context);
-                        } catch (Exception e) {
-                            XposedBridge.log(e);
-                        }
-                    }
+                try {
+                    Object notificationEntry = param.args[0];
+                    StatusBarNotification statusBarNotification = (StatusBarNotification) ReflexUtil.getField4Obj(notificationEntry, "mSbn");
+                    Context mContext = (Context) ReflexUtil.getField4Obj(param.thisObject, "mContext");
+                    Context context = mContext.createPackageContext(statusBarNotification.getPackageName(), Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
+                    fixNotificationIcon(statusBarNotification, context);
+                } catch (Exception e) {
+                    XposedBridge.log(e);
+                }
+            }
 
-                });
+        };
+
+
+        Object[] args;
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+            final Class<?> argsNew = XposedHelpers.findClass(
+                    "com.android.systemui.statusbar.notification.collection.inflation.NotifInflater.Params", classLoader);
+            args = new Object[]{args0, argsNew, args1, xc_methodHook};
+        } else {
+            args = new Object[]{args0, args1, xc_methodHook};
+        }
+
+        XposedHelpers.findAndHookMethod(clazz, "inflateViews", args);
     }
 
     private void readConfig(Context context) {

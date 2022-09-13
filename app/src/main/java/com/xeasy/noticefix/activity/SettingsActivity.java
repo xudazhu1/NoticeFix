@@ -7,8 +7,8 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.widget.EditText;
@@ -19,19 +19,19 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.xeasy.noticefix.R;
 import com.xeasy.noticefix.dao.GlobalConfigDao;
 import com.xeasy.noticefix.dao.IconLibDao;
 import com.xeasy.noticefix.databinding.SettingsActivityBinding;
 import com.xeasy.noticefix.utils.GetFilePathFromUri;
+import com.xeasy.noticefix.utils.PermissionsUtil;
 import com.xeasy.noticefix.utils.TaskUtils;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -110,14 +110,20 @@ public class SettingsActivity extends AppCompatActivity {
                 });
 
         updateIconLibrary.setOnClickListener(v -> {
-            if (ContextCompat.checkSelfPermission(SettingsActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(SettingsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            } else {
+
+            Callable<Objects> callable = () -> {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("application/json");//json 类型
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intentActivityResultLauncher.launch(intent);
+                return null;
+            };
+            if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2 ) {
+                PermissionsUtil.reqPermission(this, Manifest.permission.READ_MEDIA_IMAGES, callable);
+            } else {
+                PermissionsUtil.reqPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, callable);
             }
+
         });
 
         ImageView refreshIconLibrary = findViewById(R.id.refresh_icon_library);
@@ -136,6 +142,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     }
+
 
     private void reqPass() {
         final EditText inputServer = new EditText(this);
