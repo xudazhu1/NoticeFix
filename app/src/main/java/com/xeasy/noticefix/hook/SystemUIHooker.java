@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -71,7 +73,7 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
             try {
                 setIcon(loadPackageParam.classLoader);
             } catch (Exception e) {
-                XposedBridge.log(LOG_PREV + "hook -- resolveNotificationSdk 错误");
+                XposedBridge.log(LOG_PREV + "hook -- setIcon 错误");
                 XposedBridge.log(e);
             }
 
@@ -133,6 +135,7 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
                 "com.android.systemui.statusbar.notification.collection.NotificationEntry", classLoader);
         final Class<?> args1 = XposedHelpers.findClass(
                 "com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback", classLoader);
+
         XC_MethodHook xc_methodHook = new XC_MethodHook() {
             @Override
             protected void beforeHookedMethod(MethodHookParam param) {
@@ -176,6 +179,7 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
         }
 
         XposedHelpers.findAndHookMethod(clazz, "inflateViews", args);
+        XposedBridge.log(LOG_PREV + "inflateViews, Hook完成!!!");
     }
 
     private void readConfig(Context context) {
@@ -216,13 +220,19 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
     public static void fixNotificationIcon(StatusBarNotification statusBarNotification, Context context) {
         try {
             Notification notification = statusBarNotification.getNotification();
-            Icon smallIcon = notification.getSmallIcon();
-            Drawable drawable = smallIcon.loadDrawable(context);
-            Bitmap bitmap = ImageTools.toBitmap(drawable);
             String packageName = statusBarNotification.getPackageName();
+            Icon smallIcon = notification.getSmallIcon();
+//            XposedBridge.log(LOG_PREV + "packageName ===  " + packageName);
             // 跳过灰度图
-            if (HookConstant.globalConfigDao.skipGrayscale && new ImageUtils().isGrayscale(bitmap)) {
-                return;
+            if (HookConstant.globalConfigDao.skipGrayscale ) {
+                try {
+                    Bitmap bitmap = getBitMap4Icon(smallIcon, context);
+                    if ( new ImageUtils().isGrayscale(bitmap) ) {
+                        return;
+                    }
+                } catch (Exception e) {
+                    XposedBridge.log(LOG_PREV + "获取通知图标失败 ===  " + packageName);
+                }
             }
             for (IconFuncDao.IconFuncStatus iconFuncStatus : HookConstant.iconFuncStatuses) {
                 if (iconFuncStatus.active) {
@@ -252,6 +262,7 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
                     // 使用 算法
                     if (iconFuncStatus.iconFuncId == IconFunc.AUTO_FIX.funcId) {
                         // 不是灰度才转换 不然算法么有意义
+                        Bitmap bitmap = getBitMap4Icon(smallIcon, context);
                         if (!new ImageUtils().isGrayscale(bitmap)) {
                             // 转换为单色位图
                             Bitmap bitmap1 = ImageTools.getSinglePic(bitmap);
@@ -268,6 +279,31 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
             XposedBridge.log(LOG_PREV + "修改图标错误");
             XposedBridge.log(e);
         }
+    }
+
+
+    private static Bitmap getBitMap4Icon(Icon smallIcon, Context context) {
+        if ( smallIcon.getType() == Icon.TYPE_RESOURCE ) {
+            return ImageTools.getBitmap(context, smallIcon.getResId());
+        }
+        if ( smallIcon.getType() == Icon.TYPE_BITMAP || smallIcon.getType() == Icon.TYPE_ADAPTIVE_BITMAP ) {
+            return (Bitmap) ReflexUtil.getField4Obj(smallIcon, "mObj1");
+        }
+        if ( smallIcon.getType() == Icon.TYPE_URI || smallIcon.getType() == Icon.TYPE_URI_ADAPTIVE_BITMAP ) {
+            String url = (String) ReflexUtil.getField4Obj(smallIcon, "mString1");
+            return BitmapFactory.decodeFile(url);
+        }
+        if ( smallIcon.getType() == Icon.TYPE_DATA ) {
+            // rep.mObj1 = data;
+            // rep.mInt1 = length;
+            // rep.mInt2 = offset;
+            byte[] mObj1s = (byte[]) ReflexUtil.getField4Obj(smallIcon, "mObj1");
+            int mInt1 = (int) Objects.requireNonNull(ReflexUtil.getField4Obj(smallIcon, "mInt1"));
+            int mInt2 = (int) Objects.requireNonNull(ReflexUtil.getField4Obj(smallIcon, "mInt2"));
+            return BitmapFactory.decodeByteArray(mObj1s, mInt2, mInt1);
+        }
+        Drawable drawable = smallIcon.loadDrawable(context);
+        return ImageTools.toBitmap(drawable);
     }
 
 
