@@ -68,7 +68,7 @@ public class AppListActivity extends AppCompatActivity {
         //关键下面两句话，设置了回退按钮，及点击事件的效果
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         // 返回箭头
-        binding.toolbar.setNavigationOnClickListener(v -> finish());
+        binding.toolbar.setNavigationOnClickListener(v -> this.finish());
 
 
         List<PackageInfo> allAppInfo = AppUtil.getAllAppInfo(this);
@@ -100,6 +100,7 @@ public class AppListActivity extends AppCompatActivity {
         TaskUtils.createTask(this:: inflateAppCount);
 
     }
+
 
     private void reqImage(Bitmap bitmap) {
 

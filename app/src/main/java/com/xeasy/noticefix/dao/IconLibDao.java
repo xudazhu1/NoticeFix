@@ -124,12 +124,12 @@ public class IconLibDao {
         Type type = new TypeToken<HashSet<IconLibBean>>(){}.getType();
         HashSet<IconLibBean> iconLibBeanList = gson.fromJson(results.toString(), type);
         // 开线程保存到app数据
-        iconLibBeanList.forEach(((iconLibBean) -> {
+        iconLibBeanList.forEach((iconLibBean) -> {
             if ( getIconLibBean(context, iconLibBean.packageName) == null ) {
                 addCount.getAndIncrement();
             }
             save(context, iconLibBean);
-        }));
+        });
 //        TaskUtils.createTask(()->saveIconLibBeanList(context, iconLibBeanList));
         // 刷新成功, 此次新增图标(个):
         ((Activity)context).runOnUiThread(() ->
@@ -152,12 +152,12 @@ public class IconLibDao {
                 HashSet<IconLibBean> iconLibBeanList = gson.fromJson(dataNoAsync, type);
                 // 开线程保存到app数据
                 if ( iconLibBeanList != null ) {
-                    iconLibBeanList.forEach(((iconLibBean) -> {
+                    iconLibBeanList.forEach((iconLibBean) -> {
                         if ( getIconLibBean(context, iconLibBean.packageName) == null ) {
                             addCount.getAndIncrement();
                         }
                         save(context, iconLibBean);
-                    }));
+                    });
                 }
             });
             ((Activity)context).runOnUiThread(() -> Toast.makeText(context, context.getString(R.string.icon_lib_refresh_tips) + addCount.get(), Toast.LENGTH_SHORT).show());

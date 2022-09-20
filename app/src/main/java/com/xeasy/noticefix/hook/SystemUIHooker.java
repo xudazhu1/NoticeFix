@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.service.notification.StatusBarNotification;
 import android.view.View;
-import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.xeasy.noticefix.bean.CustomIconBean;
@@ -158,14 +157,21 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
 
         };
 
-
         Object[] args;
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+            // Android 13
             final Class<?> argsNew = XposedHelpers.findClass(
                     "com.android.systemui.statusbar.notification.collection.inflation.NotifInflater.Params", classLoader);
             args = new Object[]{args0, argsNew, args1, xc_methodHook};
+        } else if ( Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
+            // Android 10
+            args = new Object[]{args0, Runnable.class, xc_methodHook};
+        } else if ( Build.VERSION.SDK_INT == Build.VERSION_CODES.R) {
+            // Android 11
+            args = new Object[]{args0, Runnable.class, args1, xc_methodHook};
         } else {
+            // Android 12 / 12L
             args = new Object[]{args0, args1, xc_methodHook};
         }
 
@@ -200,7 +206,8 @@ public class SystemUIHooker implements IXposedHookLoadPackage {
             HookConstant.customIconBeanMap = gson.fromJson(customIconList, type3);
 //            Toast.makeText(context, "读取图标成功!!", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(context, "读取图标资源失败!!", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "读取图标资源失败!!", Toast.LENGTH_SHORT).show();
+            XposedBridge.log(LOG_PREV + "读取图标资源失败, (原因可能是NoticeFix应用没有自启权限, 也可能是刚开机唤不醒)");
             XposedBridge.log(e);
         }
     }
