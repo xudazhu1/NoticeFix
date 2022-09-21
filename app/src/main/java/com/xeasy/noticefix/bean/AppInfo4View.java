@@ -12,5 +12,6 @@ public class AppInfo4View {
     public boolean isSystem;
     public Bitmap libIcon;
     public Bitmap customIcon;
+    public boolean notHandle;
     public Bitmap lastIcon;
 }

@@ -26,6 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:translationY="55dp"
+        android:padding="5dp"
         android:orientation="vertical">
 
         <TextView
@@ -60,9 +61,10 @@
             >
         </androidx.recyclerview.widget.RecyclerView>
         <LinearLayout
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
-            android:orientation="vertical"
+            android:padding="5dp"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 <!--            <Button-->
@@ -70,30 +72,40 @@
 <!--                android:text="@string/icon_lib_config"-->
 <!--                android:layout_width="wrap_content"-->
 <!--                android:layout_height="wrap_content"/>-->
+
             <Button
                 android:id="@+id/custom_icon_config"
                 android:text="@string/custom_icon_config"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="60dp"/>
+
 
         </LinearLayout>
         <LinearLayout
-            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:orientation="vertical"
+            android:padding="5dp"
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-<!--            <Button-->
-<!--                android:id="@+id/icon_lib_config"-->
-<!--                android:text="@string/icon_lib_config"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"/>-->
-            <!--查看图标库-->
             <Button
                 android:id="@+id/view_icon_lib"
                 android:text="@string/view_icon_lib"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="60dp"/>
+<!--            <Button-->
+<!--                android:layout_weight="@integer/material_motion_duration_long_1"-->
+<!--                android:id="@+id/notice_blacklist"-->
+<!--                android:text="@string/notice_blacklist"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="60dp"/>-->
+<!--            <Button-->
+<!--                android:layout_weight="@integer/material_motion_duration_long_1"-->
+<!--                android:id="@+id/notice_whitelist"-->
+<!--                android:text="@string/notice_whitelist"-->
+<!--                android:layout_margin="10dp"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="60dp"/>-->
 
         </LinearLayout>
         <LinearLayout

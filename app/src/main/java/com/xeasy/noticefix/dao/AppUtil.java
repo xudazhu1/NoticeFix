@@ -59,6 +59,21 @@ public class AppUtil {
         return packageManager.getInstalledPackages(0);
     }
 
+    /**
+     * 获取手机已安装应用列表
+     *
+     * @param ctx c
+     * @return list
+     */
+    public static PackageInfo getAppInfo(Context ctx, String packageName) {
+        try {
+            PackageManager packageManager = ctx.getPackageManager();
+            return packageManager.getPackageInfo(packageName, 0);
+        } catch ( Exception e) {
+            return null;
+        }
+    }
+
     public static List<AppInfo4View> getApps4View(Context context, boolean refresh) {
         if ( refresh || appInfo4ViewList == null || appInfo4ViewList.isEmpty()) {
             List<PackageInfo> allAppInfo = getAllAppInfo(context);
@@ -69,6 +84,7 @@ public class AppUtil {
             int userApp = 0;
             int libIconApp = 0;
             int customIconApp = 0;
+            int whiteListApp = 0;
             for (PackageInfo packageInfo : allAppInfo) {
                 AppInfo4View appInfo4View = getApp4ViewByPackageInfo(context, packageInfo);
                 result.add(appInfo4View);
@@ -77,11 +93,13 @@ public class AppUtil {
                 if ( ! appInfo4View.isSystem ) userApp++;
                 if ( appInfo4View.libIcon != null  ) libIconApp++;
                 if ( appInfo4View.customIcon != null  ) customIconApp++;
+                if ( appInfo4View.notHandle ) whiteListApp++;
             }
             appCount.put(MyConstant.AppType.SYSTEM.typeId, systemApp);
             appCount.put(MyConstant.AppType.USER.typeId, userApp);
             appCount.put(MyConstant.AppType.LIB_ICON.typeId, libIconApp);
             appCount.put(MyConstant.AppType.CUSTOM_ICON.typeId, customIconApp);
+            appCount.put(MyConstant.AppType.WHITE_LIST.typeId, whiteListApp);
             appInfo4ViewList = result;
         }
         return appInfo4ViewList;
@@ -93,17 +111,20 @@ public class AppUtil {
         int userApp = 0;
         int libIconApp = 0;
         int customIconApp = 0;
+        int whiteListApp = 0;
         for (AppInfo4View appInfo4View : appInfo4ViewList) {
             // 开始计数
             if ( appInfo4View.isSystem ) systemApp++;
             if ( ! appInfo4View.isSystem ) userApp++;
             if ( appInfo4View.libIcon != null  ) libIconApp++;
             if ( appInfo4View.customIcon != null  ) customIconApp++;
+            if ( appInfo4View.notHandle ) whiteListApp++;
         }
         appCount.put(MyConstant.AppType.SYSTEM.typeId, systemApp);
         appCount.put(MyConstant.AppType.USER.typeId, userApp);
         appCount.put(MyConstant.AppType.LIB_ICON.typeId, libIconApp);
         appCount.put(MyConstant.AppType.CUSTOM_ICON.typeId, customIconApp);
+        appCount.put(MyConstant.AppType.WHITE_LIST.typeId, whiteListApp);
     }
 
     public static AppInfo4View getApp4ViewByPackageInfo(Context context, PackageInfo packageInfo) {
@@ -131,8 +152,11 @@ public class AppUtil {
             appInfo4View.libIcon = ImageTools.base64ToBitmap(iconLib.iconBitmap);
         }
         CustomIconBean customIcons = CustomIconDao.getCustomIcons(context, appInfo4View.AppPkg);
-        if ( customIcons != null && ! customIcons.iconBase64.isEmpty() ) {
-            appInfo4View.customIcon = (ImageTools.base64ToBitmap(customIcons.iconBase64));
+        if ( customIcons != null ) {
+            if ( customIcons.iconBase64 != null && ! customIcons.iconBase64.isEmpty() ) {
+                appInfo4View.customIcon = (ImageTools.base64ToBitmap(customIcons.iconBase64));
+            }
+            appInfo4View.notHandle = customIcons.noHandle;
         }
         appInfo4ViewMap.put(appInfo4View.AppPkg, appInfo4View);
         return appInfo4View;
@@ -168,6 +192,9 @@ public class AppUtil {
                     break;
                 case CUSTOM_ICON:
                     if ( appInfo4View.customIcon != null ) return true;
+                    break;
+                case WHITE_LIST:
+                    if ( appInfo4View.notHandle ) return true;
                     break;
                 default:
                     return false;

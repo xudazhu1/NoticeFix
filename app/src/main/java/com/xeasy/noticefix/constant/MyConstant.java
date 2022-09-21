@@ -23,8 +23,9 @@ public class MyConstant {
     public enum AppType {
         SYSTEM(1, R.string.app_filter_system),
         USER(2, R.string.app_filter_user),
-        LIB_ICON(3, R.string.app_filter_custom_icon),
-        CUSTOM_ICON(4, R.string.custom_icon_config);
+        LIB_ICON(3, R.string.app_filter_icon_matched),
+        CUSTOM_ICON(4, R.string.app_filter_custom_icon),
+        WHITE_LIST(5, R.string.app_filter_white_list);
 
         AppType(Integer funcId, Integer typeName){
             this.typeId = funcId;

@@ -17,4 +17,8 @@ public class CustomIconBean {
      * 图标背景颜色 (暂时没有使用)
      */
     public String iconColor;
+    /**
+     * 是否不处理此app
+     */
+    public boolean noHandle = false;
 }

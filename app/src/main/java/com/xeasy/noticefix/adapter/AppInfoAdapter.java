@@ -19,11 +19,13 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.xeasy.noticefix.R;
 import com.xeasy.noticefix.activity.AppListActivity;
 import com.xeasy.noticefix.bean.AppInfo4View;
+import com.xeasy.noticefix.bean.CustomIconBean;
 import com.xeasy.noticefix.dao.AppUtil;
 import com.xeasy.noticefix.dao.CustomIconDao;
 import com.xeasy.noticefix.utils.ExpandableViewHoldersUtil;
@@ -64,6 +66,12 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
     public void onBindViewHolder(@NonNull AppInfoAdapter.ViewHolder holder, int position) {
         View contentView = holder.that.itemView;
         PackageInfo temp = mFilterList.get(position);
+        inflateView(contentView, temp);
+        holder.bind(position, temp);
+    }
+
+    public void inflateView(View contentView , PackageInfo temp) {
+//
         AppInfo4View info = AppUtil.getApp4ViewByPackageInfo(context, temp);
         // app图标
         ImageView appInfoIcon = contentView.findViewById(R.id.app_info_icon);
@@ -83,6 +91,7 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
         TextView appInfoIconConfig = contentView.findViewById(R.id.app_info_icon_config);
         String hasLibIcon = "×";
         String hasCustomIcon = "×";
+        String notHandle = "×";
 
         // 图标库匹配的图标
         ImageView libIcon = contentView.findViewById(R.id.app_info_icon_lib);
@@ -96,7 +105,7 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
         ImageView customIcon = contentView.findViewById(R.id.app_info_icon_custom);
         if ( info.customIcon != null ) {
             hasCustomIcon = "√";
-            appInfoIconConfig.setTextColor(context.getColor(android.R.color.holo_green_dark));
+            appInfoIconConfig.setTextColor(context.getColor(android.R.color.holo_orange_dark));
             // 查找赋值
             customIcon.setImageBitmap(info.customIcon);
         } else {
@@ -106,14 +115,19 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
             ColorStateList textColors = appInfoVersion.getTextColors();
             appInfoIconConfig.setTextColor(textColors.getDefaultColor());
         }
+        if ( info.notHandle ) {
+            notHandle = "√";
+            appInfoIconConfig.setTextColor(context.getColor(android.R.color.holo_green_dark));
+        }
+
         appInfoIconConfig.setText(context.getString(R.string.app_info_icon_config,
-                hasLibIcon, hasCustomIcon));
+                hasLibIcon, hasCustomIcon, notHandle));
+
+        SwitchCompat notHandleSwitchCompat = contentView.findViewById(R.id.not_handle);
+        notHandleSwitchCompat.setChecked(info.notHandle);
 
         // todo 最后通知图标
         ImageView lastIcon = contentView.findViewById(R.id.app_info_last_icon);
-
-
-        holder.bind(position, temp);
     }
 
     public ExpandableViewHoldersUtil.KeepOneHolder<ViewHolder> keepOne = new ExpandableViewHoldersUtil.KeepOneHolder<>();
@@ -205,8 +219,8 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
                             viewById.setImageResource(android.R.drawable.ic_menu_add);
                             // 持久化
                             CustomIconDao.delete(context, bean.packageName);
-//                            // 调用重新渲染
-//                            notifyItemChanged(pos);
+                            // 调用重新渲染
+                            inflateView(itemView, bean);
                             // 重新渲染数量
                             ((AppListActivity)context).inflateAppCount();
                         }).setNegativeButton(context.getString(R.string.no), (dialog, which) -> {//响应事件，点击事件没写，自己添加
@@ -224,6 +238,26 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
             iconLib.setOnLongClickListener(this);
             appIcon.setOnLongClickListener(this);
             autoIcon.setOnLongClickListener(this);
+
+            // 不处理此app事件
+            SwitchCompat noHandle = itemView.findViewById(R.id.not_handle);
+            noHandle.setOnClickListener(v -> {
+                CustomIconBean customIcons = CustomIconDao.getCustomIcons(context, bean.packageName);
+                AppInfo4View app4ViewByPackageName = AppUtil.getApp4ViewByPackageName(context, bean.packageName);
+                assert app4ViewByPackageName != null;
+                app4ViewByPackageName.notHandle = noHandle.isChecked();
+                if ( customIcons == null ) {
+                    customIcons = new CustomIconBean();
+                    customIcons.pkgName = bean.packageName;
+                    customIcons.label = app4ViewByPackageName.AppName;
+                }
+                customIcons.noHandle = noHandle.isChecked();
+                CustomIconDao.save(context, customIcons);
+                //刷新本itemview
+                inflateView(itemView, bean);
+                // 刷新个数
+                ((AppListActivity)context).inflateAppCount();
+            });
 
         }
 

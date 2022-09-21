@@ -146,8 +146,9 @@ public class AppListActivity extends AppCompatActivity {
                 CustomIconDao.saveCustomIcon(this, pkgName, res);
 //                            Objects.requireNonNull(AppUtil.appInfo4ViewMap.get(pkgName)).customIcon = res;
 
-                ImageView appInfoIconCustom = expandedView.findViewById(R.id.app_info_icon_custom);
-                appInfoIconCustom.setImageBitmap(res);
+//                ImageView appInfoIconCustom = expandedView.findViewById(R.id.app_info_icon_custom);
+//                appInfoIconCustom.setImageBitmap(res);
+                adapter.inflateView(expandedView, AppUtil.getAppInfo(AppListActivity.this, pkgName));
 //                            // 重新渲染该行
 //                            adapter.notifyItemChanged(pos);
                 // 重新渲染app类型的统计数量
@@ -164,6 +165,8 @@ public class AppListActivity extends AppCompatActivity {
     public boolean inflateAppCount() {
         try {
             List<AppInfo4View> appInfo4Views = AppUtil.cacheTask.get();
+            // 重新渲染 数量
+            AppUtil.countRefresh();
             this.runOnUiThread(() -> {
                 if ( appInfo4Views.size() > 0 ) {
                     TextView systemAppCountView = findViewById(R.id.system_app_count);
@@ -174,6 +177,8 @@ public class AppListActivity extends AppCompatActivity {
                     libIconAppCount.setText(AppUtil.appCount.get(MyConstant.AppType.LIB_ICON.typeId) + "");
                     TextView customIconAppCount = findViewById(R.id.custom_icon_app_count);
                     customIconAppCount.setText(AppUtil.appCount.get(MyConstant.AppType.CUSTOM_ICON.typeId) + "");
+                    TextView whitelistCount = findViewById(R.id.whitelist_count);
+                    whitelistCount.setText(AppUtil.appCount.get(MyConstant.AppType.WHITE_LIST.typeId) + "");
                 }
             });
         } catch ( Exception e) {
@@ -217,6 +222,7 @@ public class AppListActivity extends AppCompatActivity {
         add(MyConstant.AppType.USER);
         add(MyConstant.AppType.LIB_ICON);
         add(MyConstant.AppType.CUSTOM_ICON);
+        add(MyConstant.AppType.WHITE_LIST);
     }};
 
     @Override
@@ -256,6 +262,13 @@ public class AppListActivity extends AppCompatActivity {
                 isCheckList.add(MyConstant.AppType.CUSTOM_ICON);
             } else {
                 isCheckList.remove(MyConstant.AppType.CUSTOM_ICON);
+            }
+        }
+        if (id == R.id.app_filter_white_list) {
+            if ( checked ) {
+                isCheckList.add(MyConstant.AppType.WHITE_LIST);
+            } else {
+                isCheckList.remove(MyConstant.AppType.WHITE_LIST);
             }
         }
         adapter.getFilter().filter(query);

@@ -27,11 +27,11 @@
     <string name="custom_icon_config">custom_icon_config</string>
     <string name="icon_lib_config">icon_lib_config</string>
     <string name="system_app">"system: "</string>
-    <string name="user_app">user:</string>
+    <string name="user_app">"user: "</string>
     <string name="app_lib_matched">"icon_lib: "</string>
     <string name="custom_icon">"custom: "</string>
     <string name="app_filter_icon_matched">Icon Lib Matched</string>
-    <string name="app_info_icon_config">icon_lib: %1$s icon_custom: %2$s</string>
+    <string name="app_info_icon_config">icon_lib: %1$s icon_custom: %2$s not_handle: %3$s</string>
     <string name="app_info_auto_icon">automatic</string>
     <string name="app_info_icon_lib">icon_lib</string>
     <string name="app_info_icon_custom">icon_custom</string>
@@ -81,4 +81,11 @@
     <string name="help">help @x-easy BiliBili</string>
     <string name="save_fail">save fail</string>
     <string name="save_success">save success</string>
+    <string name="notice_blacklist">notice blacklist</string>
+    <string name="notice_whitelist">notice whitelist</string>
+    <string name="not_handle">not handle this app</string>
+    <string name="always_handle_proxy_notice">Always handle proxy notice</string>
+    <string name="always_handle_proxy_notice_info">Force processing of push messages, regardless of whether the \'don\'t process\' switch is turned on</string>
+    <string name="whitelist">"not handle: "</string>
+    <string name="app_filter_white_list">Not Handle App</string>
 </resources>

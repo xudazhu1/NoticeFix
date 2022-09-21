@@ -73,6 +73,13 @@ public class SettingsActivity extends AppCompatActivity {
             GlobalConfigDao.globalConfigDao.skipGrayscale = isChecked;
             GlobalConfigDao.saveConfig(this, GlobalConfigDao.globalConfigDao);
         });
+        // 始终处理推送 开关
+        SwitchCompat alwaysHandleProxyNoticeCompat = findViewById(R.id.always_handle_proxy_notice);
+        alwaysHandleProxyNoticeCompat.setChecked(GlobalConfigDao.globalConfigDao.alwaysHandleProxyNotice);
+        alwaysHandleProxyNoticeCompat.setOnCheckedChangeListener((btn, isChecked) -> {
+            GlobalConfigDao.globalConfigDao.alwaysHandleProxyNotice = isChecked;
+            GlobalConfigDao.saveConfig(this, GlobalConfigDao.globalConfigDao);
+        });
         // 解除彩色开关
         SwitchCompat showColoredIconsSwitchCompat = findViewById(R.id.show_colored_icons);
         showColoredIconsSwitchCompat.setChecked(GlobalConfigDao.globalConfigDao.showColoredIcons);

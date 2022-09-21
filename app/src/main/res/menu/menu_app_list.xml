@@ -43,4 +43,12 @@
         android:title="@string/app_filter_custom_icon"
         app:showAsAction="never"
         />
+    <item
+        android:id="@+id/app_filter_white_list"
+        android:orderInCategory="100"
+        android:checkable="true"
+        android:checked="true"
+        android:title="@string/app_filter_white_list"
+        app:showAsAction="never"
+        />
 </menu>

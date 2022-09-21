@@ -24,14 +24,14 @@
     <string name="app_filter_system">系统应用</string>
     <string name="app_filter_custom_icon">已自定义图标</string>
     <string name="app_filter_user">三方应用</string>
-    <string name="custom_icon_config">自定义图标配置</string>
+    <string name="custom_icon_config">自定义图标</string>
     <string name="icon_lib_config">图标库配置</string>
-    <string name="system_app">系统应用: </string>
-    <string name="user_app">三方应用:</string>
-    <string name="app_lib_matched">图标库匹配: </string>
-    <string name="custom_icon">自定义图标: </string>
+    <string name="system_app">"系统: "</string>
+    <string name="user_app">"三方: "</string>
+    <string name="app_lib_matched">"库匹配: "</string>
+    <string name="custom_icon">"自定义: "</string>
     <string name="app_filter_icon_matched">已匹配图标库</string>
-    <string name="app_info_icon_config">图标库: %1$s 自定义: %2$s</string>
+    <string name="app_info_icon_config">图标库: %1$s 自定义: %2$s 白名单: %3$s</string>
     <string name="app_info_auto_icon">自动转换</string>
     <string name="app_info_icon_lib">图标库</string>
     <string name="app_info_icon_custom">自定义图标</string>
@@ -81,4 +81,11 @@
     <string name="help">视频演示教程@x-easy BiliBili</string>
     <string name="save_fail">图片保存失败</string>
     <string name="save_success">图片保存成功</string>
+    <string name="notice_blacklist">通知黑名单</string>
+    <string name="notice_whitelist">通知白名单</string>
+    <string name="not_handle">不处理此应用</string>
+    <string name="always_handle_proxy_notice">始终处理推送消息</string>
+    <string name="always_handle_proxy_notice_info">强制处理推送消息(如: HMS), 不管有没有打开\'不处理\'开关</string>
+    <string name="whitelist">"白名单: "</string>
+    <string name="app_filter_white_list">白名单</string>
 </resources>

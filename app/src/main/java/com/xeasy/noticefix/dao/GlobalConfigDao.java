@@ -9,13 +9,17 @@ import com.google.gson.Gson;
 
 public class GlobalConfigDao {
     /**
-     * 测试模式 开启使用图标库
+     * 是否已被systemui读
      */
     public boolean read = false;
     /**
      * 测试模式 开启使用图标库
      */
     public boolean debugMode = false;
+    /**
+     * 始终处理推送通知
+     */
+    public boolean alwaysHandleProxyNotice = true;
     /**
      * 是否跳过灰度
      */

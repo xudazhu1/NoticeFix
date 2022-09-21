@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/app_info_instance"
     android:layout_width="match_parent"
     android:orientation="vertical"
@@ -67,12 +67,33 @@
         android:layout_height="70dp"
         android:orientation="horizontal"
         android:baselineAligned="false">
-        <TextView
-            android:paddingStart="10dp"
+        <LinearLayout
+            android:paddingTop="10dp"
+            android:paddingBottom="0dp"
             android:gravity="center"
             android:layout_width="80dp"
+            android:orientation="vertical"
             android:text="@string/icon_preview"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
+            <TextView
+                android:gravity="center"
+                android:textSize="12sp"
+                android:layout_width="match_parent"
+                android:text="@string/not_handle"
+                android:layout_height="wrap_content"/>
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/not_handle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+        </LinearLayout>
         <LinearLayout
             android:layout_weight="@integer/material_motion_duration_long_1"
             android:layout_width="0dp"
