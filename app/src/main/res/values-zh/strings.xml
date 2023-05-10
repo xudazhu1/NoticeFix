@@ -60,7 +60,7 @@
     <string name="handle_grayscale_icons_config">不处理灰度图标</string>
     <string name="handle_grayscale_icons_config_desc">如果通知图标是灰度的, 不进行转换</string>
     <string name="icon_preview">效果预览</string>
-    <string name="icon_func_color_info">解除原生安卓彩色图标限制(仅状态栏)</string>
+    <string name="icon_func_color_info">解除原生安卓彩色图标限制(主动显示除外)</string>
     <string name="save_img">保存此图片?</string>
     <string name="save_img_title">保存</string>
     <string name="custom_icon_helper">自定义图标帮手</string>
@@ -88,4 +88,8 @@
     <string name="always_handle_proxy_notice_info">强制处理推送消息(如: HMS), 不管有没有打开\'不处理\'开关</string>
     <string name="whitelist">"白名单: "</string>
     <string name="app_filter_white_list">白名单</string>
+    <string name="expand_headsup">展开横幅通知</string>
+    <string name="expand_status_bar">展开通知栏通知</string>
+    <string name="expand_notice">展开通知</string>
+    <string name="expand_notice_content">展开所有应用的通知内容(如果可以)</string>
 </resources>

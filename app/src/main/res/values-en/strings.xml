@@ -60,7 +60,7 @@
     <string name="handle_grayscale_icons_config">Does not handle grayscale icons</string>
     <string name="handle_grayscale_icons_config_desc">If notification icon is grayscale, do not convert</string>
     <string name="icon_preview">icon preview</string>
-    <string name="icon_func_color_info">Remove the limitation of Android color icons(only status bar)</string>
+    <string name="icon_func_color_info">Remove the limitation of Android color icons(not working in AOD)</string>
     <string name="save_img">Save Icon?</string>
     <string name="save_img_title">save</string>
     <string name="custom_icon_helper">custom icon helper</string>
@@ -88,4 +88,8 @@
     <string name="always_handle_proxy_notice_info">Force processing of push messages, regardless of whether the \'don\'t process\' switch is turned on</string>
     <string name="whitelist">"not handle: "</string>
     <string name="app_filter_white_list">Not Handle App</string>
+    <string name="expand_headsup">expand headsup notice</string>
+    <string name="expand_status_bar">expand status bar notice</string>
+    <string name="expand_notice">Expand Notice</string>
+    <string name="expand_notice_content">Expand the notification content of all apps (if possible)</string>
 </resources>

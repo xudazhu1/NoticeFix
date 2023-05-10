@@ -125,6 +125,10 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
 
         SwitchCompat notHandleSwitchCompat = contentView.findViewById(R.id.not_handle);
         notHandleSwitchCompat.setChecked(info.notHandle);
+        SwitchCompat expandHeadsUpSwitchCompat = contentView.findViewById(R.id.expand_headsup);
+        expandHeadsUpSwitchCompat.setChecked(info.expandHeadsUp);
+        SwitchCompat expandStatusBar = contentView.findViewById(R.id.expand_status_bar);
+        expandStatusBar.setChecked(info.expandStatusBar);
 
         // todo 最后通知图标
         ImageView lastIcon = contentView.findViewById(R.id.app_info_last_icon);
@@ -252,6 +256,44 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
                     customIcons.label = app4ViewByPackageName.AppName;
                 }
                 customIcons.noHandle = noHandle.isChecked();
+                CustomIconDao.save(context, customIcons);
+                //刷新本itemview
+                inflateView(itemView, bean);
+                // 刷新个数
+                ((AppListActivity)context).inflateAppCount();
+            });
+            // 展开 heads up
+            SwitchCompat expandHeadsUp = itemView.findViewById(R.id.expand_headsup);
+            expandHeadsUp.setOnClickListener(v -> {
+                CustomIconBean customIcons = CustomIconDao.getCustomIcons(context, bean.packageName);
+                AppInfo4View app4ViewByPackageName = AppUtil.getApp4ViewByPackageName(context, bean.packageName);
+                assert app4ViewByPackageName != null;
+                app4ViewByPackageName.expandHeadsUp = expandHeadsUp.isChecked();
+                if ( customIcons == null ) {
+                    customIcons = new CustomIconBean();
+                    customIcons.pkgName = bean.packageName;
+                    customIcons.label = app4ViewByPackageName.AppName;
+                }
+                customIcons.expandHeadsUp = expandHeadsUp.isChecked();
+                CustomIconDao.save(context, customIcons);
+                //刷新本itemview
+                inflateView(itemView, bean);
+                // 刷新个数
+                ((AppListActivity)context).inflateAppCount();
+            });
+            // 展开 heads up
+            SwitchCompat expandStatusBar = itemView.findViewById(R.id.expand_status_bar);
+            expandStatusBar.setOnClickListener(v -> {
+                CustomIconBean customIcons = CustomIconDao.getCustomIcons(context, bean.packageName);
+                AppInfo4View app4ViewByPackageName = AppUtil.getApp4ViewByPackageName(context, bean.packageName);
+                assert app4ViewByPackageName != null;
+                app4ViewByPackageName.expandStatusBar = expandStatusBar.isChecked();
+                if ( customIcons == null ) {
+                    customIcons = new CustomIconBean();
+                    customIcons.pkgName = bean.packageName;
+                    customIcons.label = app4ViewByPackageName.AppName;
+                }
+                customIcons.expandStatusBar = expandStatusBar.isChecked();
                 CustomIconDao.save(context, customIcons);
                 //刷新本itemview
                 inflateView(itemView, bean);

@@ -1,5 +1,6 @@
 package com.xeasy.noticefix.activity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -97,7 +98,13 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.restart_systemui) {
-            CommandUtil.restartSystemUI(this);
+            new AlertDialog.Builder(this).setTitle("confirm")//设置对话框标题
+                    .setMessage("Restart SystemUI ? ")
+                    .setPositiveButton(this.getString(R.string.yes), (dialog, which) -> {//确定按钮的响应事件，点击事件没写，自己添加
+                        CommandUtil.restartSystemUI(this);
+                    }).setNegativeButton(this.getString(R.string.no), (dialog, which) -> {//响应事件，点击事件没写，自己添加
+                    }).show();//在按键响应事件中显示此对话框
+
             return true;
         }
         return super.onOptionsItemSelected(item);

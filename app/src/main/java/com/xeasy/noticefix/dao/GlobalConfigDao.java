@@ -29,6 +29,10 @@ public class GlobalConfigDao {
      */
     public boolean showColoredIcons = true;
     /**
+     * 展开通知
+     */
+    public boolean expandAllNotice = false;
+    /**
      * 解除原生安卓色彩
      */
     public boolean customIconHelper = true;

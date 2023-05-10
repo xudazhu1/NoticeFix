@@ -87,6 +87,13 @@ public class SettingsActivity extends AppCompatActivity {
             GlobalConfigDao.globalConfigDao.showColoredIcons = isChecked;
             GlobalConfigDao.saveConfig(this, GlobalConfigDao.globalConfigDao);
         });
+        // 展开通知 开关
+        SwitchCompat expandAllNoticeSwitchCompat = findViewById(R.id.expand_all_notice);
+        expandAllNoticeSwitchCompat.setChecked(GlobalConfigDao.globalConfigDao.expandAllNotice);
+        expandAllNoticeSwitchCompat.setOnCheckedChangeListener((btn, isChecked) -> {
+            GlobalConfigDao.globalConfigDao.expandAllNotice = isChecked;
+            GlobalConfigDao.saveConfig(this, GlobalConfigDao.globalConfigDao);
+        });
 //        // 自定义图标帮助
 //        SwitchCompat customIconHelperSwitchCompat = findViewById(R.id.custom_icon_helper);
 //        customIconHelperSwitchCompat.setChecked(GlobalConfigDao.globalConfigDao.customIconHelper);

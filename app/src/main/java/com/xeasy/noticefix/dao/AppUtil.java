@@ -157,6 +157,8 @@ public class AppUtil {
                 appInfo4View.customIcon = (ImageTools.base64ToBitmap(customIcons.iconBase64));
             }
             appInfo4View.notHandle = customIcons.noHandle;
+            appInfo4View.expandStatusBar = customIcons.expandStatusBar;
+            appInfo4View.expandHeadsUp = customIcons.expandHeadsUp;
         }
         appInfo4ViewMap.put(appInfo4View.AppPkg, appInfo4View);
         return appInfo4View;

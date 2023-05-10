@@ -21,4 +21,12 @@ public class CustomIconBean {
      * 是否不处理此app
      */
     public boolean noHandle = false;
+    /**
+     * 是否 展开此app的 heads up
+     */
+    public boolean expandHeadsUp = false;
+    /**
+     * 是否 展开此app的 status bar
+     */
+    public boolean expandStatusBar = false;
 }
