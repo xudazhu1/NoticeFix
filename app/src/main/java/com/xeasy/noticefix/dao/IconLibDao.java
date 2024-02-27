@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import com.xeasy.noticefix.R;
 import com.xeasy.noticefix.bean.AppInfo4View;
 import com.xeasy.noticefix.bean.IconLibBean;
+import com.xeasy.noticefix.utils.AppNotification;
 import com.xeasy.noticefix.utils.ImageTools;
 import com.xeasy.noticefix.utils.TaskUtils;
 
@@ -30,6 +31,7 @@ import java.util.Objects;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import de.robv.android.xposed.XSharedPreferences;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -48,6 +50,8 @@ public class IconLibDao {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(iconLibBean.packageName, gson.toJson(iconLibBean));
+        // 发送刷新通知
+        AppNotification.sendFlashNoticeMessage(context, null);
         boolean commit = edit.commit();
         if ( commit ) {
             Log.d(IconLibDao.class.getName(), "保存配置信息成功");
@@ -92,7 +96,13 @@ public class IconLibDao {
             // 准备返回的数据
 //            IconLibBeans = new ArrayList<>();
             // 先判断 app数据里有没有
-            SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+//            SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences;
+            if ( context.getPackageName().equals("com.xeasy.noticefix") ) {
+                sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+            } else {
+                sharedPreferences = new XSharedPreferences("com.xeasy.noticefix", FILE_NAME);
+            }
             Map<String, ?> all = sharedPreferences.getAll();
             // 没有过 初始化
             if ( all == null || all.size() == 0) {

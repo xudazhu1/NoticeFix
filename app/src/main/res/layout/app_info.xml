@@ -123,7 +123,7 @@
                     android:gravity="center"
                     android:text="@string/app_info_auto_icon" />
                 <!--自动转换-->
-                <ImageView
+                <com.xeasy.noticefix.common.WHImageView
                     android:id="@+id/app_info_last_icon"
                     android:layout_width="80dp"
                     android:layout_height="match_parent"
@@ -145,13 +145,29 @@
                     android:gravity="center"
                     android:text="@string/app_info_icon_lib" />
 
-                <ImageView
-                    android:id="@+id/app_info_icon_lib"
-                    android:layout_width="80dp"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/v_app_icon"
-                    android:padding="2dp"
-                    android:src="@mipmap/none" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="0dp"
+                    app:cardCornerRadius="50dp"
+                    app:cardElevation="0dp">
+                    <com.xeasy.noticefix.common.WHImageView
+                        android:id="@+id/app_info_icon_lib"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/v_app_icon"
+                        android:layout_margin="8dp"
+                        android:src="@mipmap/none" />
+                </androidx.cardview.widget.CardView>
+
+<!--                <com.xeasy.noticefix.common.WHImageView-->
+<!--                    android:id="@+id/app_info_icon_lib"-->
+<!--                    android:layout_width="80dp"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:contentDescription="@string/v_app_icon"-->
+<!--                    android:padding="2dp"-->
+<!--                    android:src="@mipmap/none" />-->
             </LinearLayout>
 
             <LinearLayout
@@ -167,7 +183,7 @@
                     android:gravity="center"
                     android:text="@string/app_info_icon_custom" />
 
-                <ImageView
+                <com.xeasy.noticefix.common.WHImageView
                     android:id="@+id/app_info_icon_custom"
                     android:layout_width="80dp"
                     android:layout_height="match_parent"

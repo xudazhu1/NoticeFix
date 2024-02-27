@@ -8,10 +8,10 @@ android {
 
     defaultConfig {
         applicationId "com.xeasy.noticefix"
-        minSdk 29
+        minSdk 28
         targetSdk 33
-        versionCode 36
-        versionName "0.3.6"
+        versionCode 37
+        versionName "0.3.7_a14"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,13 +37,28 @@ dependencies {
 //    compileOnly 'com.android.support:support-v4:23.1.1'
 //    compileOnly 'com.android.support:appcompat-v7:23.1.1'
 
+    // 解析xml
+    implementation 'org.jsoup:jsoup:1.12.1'
+
+    implementation("org.dom4j:dom4j:2.1.4")
+
     // 权限库
 //    implementation 'com.yanzhenjie:permission:2.0.3'
 
     // http请求
     implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.7")
     // root
-    implementation "com.github.topjohnwu.libsu:core:3.1.2"
+//    implementation "com.github.topjohnwu.libsu:core:3.1.2"
+    def libSuVersion = '5.2.1'
+    // The core module that provides APIs to a shell
+    implementation "com.github.topjohnwu.libsu:core:${libSuVersion}"
+
+    // Optional: APIs for creating root services. Depends on ":core"
+    implementation "com.github.topjohnwu.libsu:service:${libSuVersion}"
+
+    // Optional: Provides remote file system support
+    implementation "com.github.topjohnwu.libsu:nio:${libSuVersion}"
+    implementation "com.github.topjohnwu.libsu:io:${libSuVersion}"
     //json 库
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.0'

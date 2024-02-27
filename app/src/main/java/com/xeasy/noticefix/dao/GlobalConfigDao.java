@@ -6,6 +6,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.xeasy.noticefix.utils.AppNotification;
+
+import de.robv.android.xposed.XSharedPreferences;
 
 public class GlobalConfigDao {
     /**
@@ -40,13 +43,21 @@ public class GlobalConfigDao {
 
     public static GlobalConfigDao globalConfigDao = new GlobalConfigDao();
 
-    private static final String FILE_NAME = GLOBAL_CONFIG_FILE;
+    public static final String FILE_NAME = GLOBAL_CONFIG_FILE;
 
-    private static final Gson gson = new Gson();
+    public static final Gson gson = new Gson();
 
     public static void initGlobalConfig(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences;
+        if ( context.getPackageName().equals("com.xeasy.noticefix") ) {
+            sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        } else {
+            XSharedPreferences xSharedPreferences = new XSharedPreferences("com.xeasy.noticefix", FILE_NAME);
+            xSharedPreferences.makeWorldReadable();
+            sharedPreferences = xSharedPreferences;
+        }
         String string = sharedPreferences.getString(FILE_NAME, null);
+//        Toast.makeText(context, "initGlobalConfig ==>> " + string, Toast.LENGTH_SHORT).show();
         // 如果没有 生成默认配置
         if ( string != null) {
             globalConfigDao = gson.fromJson(string, GlobalConfigDao.class);
@@ -57,6 +68,8 @@ public class GlobalConfigDao {
     public static void saveConfig(Context context, GlobalConfigDao globalConfigDao) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().putString(FILE_NAME, gson.toJson(globalConfigDao)).apply();
+        // 发送刷新通知
+        AppNotification.sendFlashNoticeMessage(context, null);
     }
 
 }

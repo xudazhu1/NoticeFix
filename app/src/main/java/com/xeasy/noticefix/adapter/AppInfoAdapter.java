@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +21,14 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.xeasy.noticefix.R;
 import com.xeasy.noticefix.activity.AppListActivity;
 import com.xeasy.noticefix.bean.AppInfo4View;
 import com.xeasy.noticefix.bean.CustomIconBean;
+import com.xeasy.noticefix.constant.MyConstant;
 import com.xeasy.noticefix.dao.AppUtil;
 import com.xeasy.noticefix.dao.CustomIconDao;
 import com.xeasy.noticefix.utils.ExpandableViewHoldersUtil;
@@ -99,6 +102,13 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
             hasLibIcon = "√";
             appInfoIconConfig.setTextColor(context.getColor(android.R.color.holo_blue_dark));
             libIcon.setImageBitmap(info.libIcon);
+            // 设置背景色
+            if (null != info.libIconColor && !info.libIconColor.equals("")){
+                libIcon.setBackgroundColor(Color.parseColor(info.libIconColor));
+            }
+            CardView parent = (CardView) libIcon.getParent();
+            parent.setCardBackgroundColor(Color.parseColor(info.libIconColor));
+
         }else {
             libIcon.setImageResource(R.mipmap.none);
         }
@@ -149,7 +159,7 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
             System.out.println(charString);
             AppListActivity context = (AppListActivity) AppInfoAdapter.this.context;
             long start = System.currentTimeMillis();
-            if ( charString.isEmpty() && context.isCheckList.size() == 4 ) {
+            if ( charString.isEmpty() && context.isCheckList.size() == MyConstant.AppType.values().length ) {
                 //没有过滤的内容，则使用源数据
                 mFilterList = appInfoList;
             } else {

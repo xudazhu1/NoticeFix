@@ -14,7 +14,19 @@ import java.util.Map;
 public class HookConstant {
     public static Gson gson = new Gson();
     public static GlobalConfigDao globalConfigDao = new GlobalConfigDao();
+
+    public static GlobalConfigDao getGlobalConfigDao() {
+        if ( null == globalConfigDao ) {
+            globalConfigDao = new GlobalConfigDao();
+        }
+        return globalConfigDao;
+    }
+
     public static List<IconFuncDao.IconFuncStatus> iconFuncStatuses = new ArrayList<>();
     public static Map<String, IconLibBean> iconLibBeanMap = new HashMap<>();
     public static Map<String, CustomIconBean> customIconBeanMap = new HashMap<>();
+    /**
+     * com.android.systemui.statusbar.NotificationListener
+     */
+    public static Map<String, Object> objectMap = new HashMap<>();
 }

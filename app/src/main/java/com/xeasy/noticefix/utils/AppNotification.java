@@ -17,6 +17,9 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.xeasy.noticefix.R;
+import com.xeasy.noticefix.activity.MainActivity;
+
 /**
  * Author：SkySmile
  * Date：2019/2/28
@@ -31,8 +34,8 @@ public class AppNotification {
     private static int id = 1;
 
     //影视类通知渠道
-    public final static String mediaChannelId = "0x1"; //通知渠道ID
-    public final static String mediaChannelName = "影视"; //通知渠道名称，显示在手机上该APP的通知管理中
+    public final static String mediaChannelId = "chat"; //通知渠道ID
+    public final static String mediaChannelName = "聊天"; //通知渠道名称，显示在手机上该APP的通知管理中
     public final static int mediaChannelImportance = NotificationManager.IMPORTANCE_HIGH; //通知渠道重要性
 
     //美食类通知渠道
@@ -74,6 +77,37 @@ public class AppNotification {
      */
     public static void sendNotification(Context context, String channelId, String title,
                                         String text, int smallIcon, int largeIcon, PendingIntent pi) {
+        Notification initNotice = initNotice(context, channelId, title,
+                text, smallIcon, largeIcon, pi);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(
+                Context.NOTIFICATION_SERVICE);
+//        notificationManager.notify(id++, notification);
+        notificationManager.notify(id++, initNotice);
+    }
+
+
+    public static void sendFlashNoticeMessage(Context context, String pkgName){
+        // 发送特殊通知 告诉系统刷新所有通知
+        Intent intent = new Intent(context, MainActivity.class);
+        PendingIntent pi;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pi = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+        }
+        String contextString = pkgName == null ? "null" : pkgName;
+        Notification notification = AppNotification.initNotice(context, AppNotification.mediaChannelId,
+                "easy-reset", contextString, R.mipmap.head, R.mipmap.head, pi);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(
+                Context.NOTIFICATION_SERVICE);
+//        notificationManager.notify(id++, notification);
+        notificationManager.notify(19960324, notification);
+
+    }
+
+
+    public static Notification initNotice( Context context, String channelId, String title,
+                                           String text, int smallIcon, int largeIcon, PendingIntent pi ) {
         //判断通知是否开启
         if (!isNotificationEnabled(context)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -94,7 +128,7 @@ public class AppNotification {
                     message = foodChannelName;
                 }
                 // 创建通知渠道
-                createNotificationChannel(context, channelId, message, NotificationManager.IMPORTANCE_DEFAULT );
+                createNotificationChannel(context, channelId, message, NotificationManager.IMPORTANCE_HIGH );
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("提示");
@@ -106,19 +140,16 @@ public class AppNotification {
         }
         //发送通知
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId);
-                builder.setContentTitle(title);
-                builder.setContentText(text);
-                builder.setWhen(System.currentTimeMillis());
-                builder.setSmallIcon(smallIcon);
-                builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), largeIcon));
-                builder.setContentIntent(pi);
-                builder.setAutoCancel(true);
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(
-                Context.NOTIFICATION_SERVICE);
-        Notification notification = builder.build();
-
-        notificationManager.notify(id++, notification);
+        builder.setContentTitle(title);
+        builder.setContentText(text);
+        builder.setWhen(System.currentTimeMillis());
+        builder.setSmallIcon(smallIcon);
+        builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), largeIcon));
+        builder.setContentIntent(pi);
+        builder.setAutoCancel(true);
+        return builder.build();
     }
+
 
     /**
      * 判断App通知是否开启

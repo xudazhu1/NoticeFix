@@ -11,18 +11,21 @@ import com.google.gson.Gson;
 import com.xeasy.noticefix.bean.AppInfo4View;
 import com.xeasy.noticefix.bean.CustomIconBean;
 import com.xeasy.noticefix.constant.MyConstant;
+import com.xeasy.noticefix.utils.AppNotification;
 import com.xeasy.noticefix.utils.ImageTools;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import de.robv.android.xposed.XSharedPreferences;
+
 public class CustomIconDao {
 
-    private static final String FILE_NAME = CUSTOM_ICON_FILE;
+    public static final String FILE_NAME = CUSTOM_ICON_FILE;
 
-    static Gson gson = new Gson();
-    static Map<String, CustomIconBean> customIconBeanMap;
+    public static Gson gson = new Gson();
+    public static Map<String, CustomIconBean> customIconBeanMap;
 
     /**
      * 持久化自定义通知图标
@@ -46,7 +49,7 @@ public class CustomIconDao {
         //  自定义图标 计数 + 1
         AppUtil.appCount.put(MyConstant.AppType.CUSTOM_ICON.typeId,
                 Objects.requireNonNull(AppUtil.appCount.get(MyConstant.AppType.CUSTOM_ICON.typeId)) + 1);
-        return CustomIconDao.save(context, customIconBean);
+        return save(context, customIconBean);
     }
 
     public static boolean save(Context context, CustomIconBean customIconBean) {
@@ -56,6 +59,8 @@ public class CustomIconDao {
 
         edit.putString(customIconBean.pkgName, gson.toJson(customIconBean));
         boolean commit = edit.commit();
+        // 发送刷新通知
+        AppNotification.sendFlashNoticeMessage(context, null);
         if ( commit ) {
             customIconBeanMap.put(customIconBean.pkgName, customIconBean);
             Log.d(CustomIconDao.class.getName(), "保存自定义图标成功");
@@ -83,6 +88,8 @@ public class CustomIconDao {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.remove(pkgName);
         boolean commit = edit.commit();
+        // 发送刷新通知
+        AppNotification.sendFlashNoticeMessage(context, null);
         if ( commit ) {
             customIconBeanMap.remove(pkgName);
             Log.d(CustomIconDao.class.getName(), "删除自定义图标成功");
@@ -98,7 +105,13 @@ public class CustomIconDao {
      */
     public static Map<String, CustomIconBean> getAllCustomIcons(Context context) {
         if ( customIconBeanMap == null ) {
-            SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+//            SharedPreferences sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences;
+            if ( context.getPackageName().equals("com.xeasy.noticefix") ) {
+                sharedPreferences = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+            } else {
+                sharedPreferences = new XSharedPreferences("com.xeasy.noticefix", FILE_NAME);
+            }
             Map<String, ?> all = sharedPreferences.getAll();
             // 准备返回的数据
             customIconBeanMap = new HashMap<>();

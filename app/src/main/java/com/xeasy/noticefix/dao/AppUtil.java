@@ -150,6 +150,7 @@ public class AppUtil {
         IconLibBean iconLib = IconLibDao.getIconLibBean(context, appInfo4View.AppPkg);
         if ( iconLib != null ) {
             appInfo4View.libIcon = ImageTools.base64ToBitmap(iconLib.iconBitmap);
+            appInfo4View.libIconColor = iconLib.iconColor;
         }
         CustomIconBean customIcons = CustomIconDao.getCustomIcons(context, appInfo4View.AppPkg);
         if ( customIcons != null ) {

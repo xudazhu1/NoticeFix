@@ -1,8 +1,10 @@
 package com.xeasy.noticefix.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,7 @@ import com.xeasy.noticefix.R;
 import com.xeasy.noticefix.adapter.IconOrderAdapter;
 import com.xeasy.noticefix.dao.IconFuncDao;
 import com.xeasy.noticefix.databinding.ActivityMainBinding;
+import com.xeasy.noticefix.utils.AppNotification;
 import com.xeasy.noticefix.utils.CommandUtil;
 
 import java.util.List;
@@ -83,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private static final String LOG_PREV = "NoticeFix---";
+
+    @SuppressLint("UnspecifiedImmutableFlag")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -92,10 +98,37 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+
+//            PackageManager packageManager = this.getPackageManager();
+//            boolean b = packageManager.hasSystemFeature(PackageManager.FEATURE_MIDI);
+//            Log.d("Sel", "FEATURE_MIDI.. ==>  " + b);
+//            MidiManager mMidiManager = (MidiManager) this.getApplicationContext().getSystemService(Context.MIDI_SERVICE);
+//            MidiDeviceInfo[] devices = mMidiManager.getDevices();
+//            for ( MidiDeviceInfo device : devices ) {
+//                Log.d("Sel", "device is "+ device.getProperties().getString(MidiDeviceInfo.PROPERTY_MANUFACTURER)
+//                        + " | PROPERTY_USB_DEVICE ? == " + device.getProperties().getString(MidiDeviceInfo.PROPERTY_USB_DEVICE)
+//                        + " | PROPERTY_BLUETOOTH_DEVICE ? == " + device.getProperties().getString(MidiDeviceInfo.PROPERTY_BLUETOOTH_DEVICE));
+//            }
+//            Log.d("Sel", "end.. ");
+
+
             // 设置页面跳转
             Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             startActivity(intent);
             return true;
+        }
+        if (id == R.id.reset_icon) {
+
+            // todo 测试命令
+//            CommandUtil.execShellBackAll("chmod -R 777 /data_mirror/data_ce/null/0/com.xiaomi.smarthome/shared_prefs/1516982620_local_userconfig_pref.xml", true);
+//            String pgrep_system = CommandUtil.execShellBackAll("cat /data_mirror/data_ce/null/0/com.xiaomi.smarthome/shared_prefs/1516982620_local_userconfig_pref.xml", true);
+//            Toast.makeText(this, pgrep_system, Toast.LENGTH_SHORT).show();
+            String s = CommandUtil.execShellBackAll("chmod 664 /data/data/com.xeasy.noticefix/shared_prefs/global_config_file.xml", false);
+            Log.d(LOG_PREV, "设置权限664  ==》 " + s);
+            String s2 = CommandUtil.execShellBackAll("chmod -R 755 /data/data/com.xeasy.noticefix/shared_prefs", false);
+            Log.d(LOG_PREV, "设置权限 755  ==》 " + s2);
+
+            AppNotification.sendFlashNoticeMessage(this, null);
         }
         if (id == R.id.restart_systemui) {
             new AlertDialog.Builder(this).setTitle("confirm")//设置对话框标题

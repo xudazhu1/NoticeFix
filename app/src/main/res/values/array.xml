@@ -7,5 +7,6 @@
 <!--        <item>com.tencent.karaoke</item>-->
 <!--        <item>com.tencent.tim</item>-->
         <item>com.android.systemui</item>
+        <item>com.yusi.chongchong</item>
     </string-array>
 </resources>

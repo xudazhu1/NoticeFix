@@ -15,4 +15,10 @@
         android:title="@string/restart_systemui"
         app:showAsAction="never"
         />
+    <item
+        android:id="@+id/reset_icon"
+        android:orderInCategory="100"
+        android:title="Flash Icon"
+        app:showAsAction="never"
+        />
 </menu>

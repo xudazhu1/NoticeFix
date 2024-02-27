@@ -32,7 +32,7 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.xeasy.noticefix.R;
 
@@ -490,7 +490,8 @@ public class ImageTools {
         Bitmap bitmap;
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
 //            Drawable vectorDrawable = context.getDrawable(vectorDrawableId);
-            Drawable vectorDrawable = AppCompatResources.getDrawable(context, vectorDrawableId);
+//            Drawable vectorDrawable = AppCompatResources.getDrawable(context, vectorDrawableId);
+            Drawable vectorDrawable = ResourcesCompat.getDrawable(context.getResources(), vectorDrawableId, null);
             assert vectorDrawable != null;
             bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
                     vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);

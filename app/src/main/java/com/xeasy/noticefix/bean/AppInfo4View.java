@@ -11,6 +11,7 @@ public class AppInfo4View {
     public String versionAndType;
     public boolean isSystem;
     public Bitmap libIcon;
+    public String libIconColor;
     public Bitmap customIcon;
     public boolean notHandle;
     /**

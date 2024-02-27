@@ -8,11 +8,14 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.xeasy.noticefix.bean.IconFunc;
 import com.xeasy.noticefix.constant.MyConstant;
+import com.xeasy.noticefix.utils.AppNotification;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import de.robv.android.xposed.XSharedPreferences;
 
 public class IconFuncDao {
 
@@ -32,6 +35,8 @@ public class IconFuncDao {
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(iconFuncStatusFrom.iconFuncId+"", gson.toJson(iconFuncStatusFrom));
         edit.putString(iconFuncStatusTo.iconFuncId+"", gson.toJson(iconFuncStatusTo));
+        // 发送刷新通知
+        AppNotification.sendFlashNoticeMessage(context, null);
         boolean commit = edit.commit();
         if ( commit ) {
             Log.d(IconFuncDao.class.getName(), "保存配置信息成功");
@@ -43,6 +48,8 @@ public class IconFuncDao {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MyConstant.ICON_FUNC_ORDER_CONFIG, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(iconFuncStatus.iconFuncId+"", gson.toJson(iconFuncStatus));
+        // 发送刷新通知
+        AppNotification.sendFlashNoticeMessage(context, null);
         boolean commit = edit.commit();
         if ( commit ) {
             Log.d(IconFuncDao.class.getName(), "保存配置信息成功");
@@ -69,13 +76,19 @@ public class IconFuncDao {
 
     public static List<IconFuncStatus> getIconFunc(Context context) {
         if ( iconFuncStatuses == null ) {
-            SharedPreferences sharedPreferences = context.getSharedPreferences(MyConstant.ICON_FUNC_ORDER_CONFIG, Context.MODE_PRIVATE);
+//            SharedPreferences sharedPreferences = context.getSharedPreferences(MyConstant.ICON_FUNC_ORDER_CONFIG, Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences;
+            if ( context.getPackageName().equals("com.xeasy.noticefix") ) {
+                sharedPreferences = context.getSharedPreferences(MyConstant.ICON_FUNC_ORDER_CONFIG, Context.MODE_PRIVATE);
+            } else {
+                sharedPreferences = new XSharedPreferences("com.xeasy.noticefix", MyConstant.ICON_FUNC_ORDER_CONFIG);
+            }
             Map<String, ?> all = sharedPreferences.getAll();
-            // 没有过 初始化
-            SharedPreferences.Editor edit = sharedPreferences.edit();
             // 准备返回的数据
             iconFuncStatuses = new ArrayList<>();
             if ( all == null || all.size() == 0) {
+                // 没有过 初始化
+                SharedPreferences.Editor edit = sharedPreferences.edit();
                 IconFunc[] values = IconFunc.values();
                 for (IconFunc value : values) {
                     IconFuncStatus iconFuncStatus = new IconFuncStatus();
@@ -85,6 +98,8 @@ public class IconFuncDao {
                     iconFuncStatus.order = value.funcId;
                     // 持久化
                     edit.putString(value.funcId + "", gson.toJson(iconFuncStatus));
+                    // 发送刷新通知
+                    AppNotification.sendFlashNoticeMessage(context, null);
                     iconFuncStatuses.add(iconFuncStatus);
                 }
                 boolean commit = edit.commit();
